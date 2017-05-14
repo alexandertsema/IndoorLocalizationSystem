@@ -1,6 +1,6 @@
 import os
 
-from helpers.configuration import Configuration
+from src.helpers.configuration import Configuration
 
 
 def get_frames_delta(frame_1, frame_2):

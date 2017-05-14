@@ -2,9 +2,9 @@ import os
 
 import tensorflow as tf
 
-from data.abstract.data_set import DataSet as DataSet_Abstract
-from data.converter import Converter
-from data.inputs import Inputs
+from src.data.abstract.data_set import DataSet as DataSet_Abstract
+from src.data.converter import Converter
+from src.data.inputs import Inputs
 
 
 class DataSet(DataSet_Abstract):
@@ -19,9 +19,9 @@ class DataSet(DataSet_Abstract):
         self.validation_set.x, self.validation_set.y = self.read_tf_records_file('validation_set', batch_size)
         self.testing_set.x, self.testing_set.y = self.read_tf_records_file('testing_set', batch_size)
 
-        if self.training_set.x is None or self.validation_set.x is None\
-                or self.training_set.y is None or self.validation_set.y is None \
-                or self.testing_set.x is None or self.testing_set.y is None:
+        if self.training_set.x is None and self.validation_set.x is None \
+                and self.training_set.y is None and self.validation_set.y is None \
+                and self.testing_set.x is None and self.testing_set.y is None:
             print()
             print('Datasets do not exist, creating new ones...')
 
@@ -70,7 +70,7 @@ class DataSet(DataSet_Abstract):
 
             print("Creating batches for {}...".format(name))
             images, sparse_labels = tf.train.batch(
-                [image, label_x], batch_size=batch_size, num_threads=self.config.NUM_PREPROCESSING_THREADS,
+                [image, [label_x, label_y]], batch_size=batch_size, num_threads=self.config.NUM_PREPROCESSING_THREADS,
                 capacity=1000 + 3 * batch_size)
 
             return images, sparse_labels

@@ -1,12 +1,16 @@
-from data.input_set import InputSet
-from data.point import Point
+from src.data.input_set import InputSet
+from src.data.point import Point
 
 
 class Configuration(object):
     def __init__(self):
+        """
+        path params
+        """
         self.PATH = "/home/alex/Documents/Project/data/FRAME_DATABASES/1_TILE"
         self.PATH_LABELS = "/home/alex/Documents/Project/LSTM_labels"
         self.DATA_SET_PATH = "/home/alex/Documents/Project/LSTM_data_sets"
+        self.OUTPUT_PATH = '/home/alex/PycharmProjects/IndoorLocalizationSystem/runs/out_'
 
         self.TILE_1_NUMBER_OF_EXAMPLES = 3618
 
@@ -25,14 +29,57 @@ class Configuration(object):
 
         self.IMAGE_SIZE = Size(268, 32, 3)
 
-        self.VALIDATION_PERC = 0.0
-        self.TESTING_PERC = 0.0
-        self.TRAINING_PERC = 1 - self.VALIDATION_PERC - self.TESTING_PERC
+        """
+        modes
+        """
 
+        class Mode(object):
+            def __init__(self):
+                self.TRAINING = 'training'
+                self.VALIDATION = 'validation'
+                self.TESTING = 'testing'
+                pass
+
+        self.MODE = Mode()
+
+        """
+        model params
+        """
+        self.LEAKY_RELU_ALPHA = 0.1
+        self.LSTM_HIDDEN_UNITS = 100
+        self.NUMBER_STEPS = 20
+
+        """
+        training params
+        """
+
+        self.BATCH_SIZE = 128
         self.EPOCHS = 100
         self.LOG_PERIOD = 10  # steps
         self.SAVE_PERIOD = 500  # steps
         self.MIN_FRACTION_OF_EXAMPLES_IN_QUEUE = 0.4
         self.NUM_PREPROCESSING_THREADS = 16
+        self.NUM_EPOCHS_PER_DECAY = 10  # Epochs after which learning rate decays.
+        self.INITIAL_LEARNING_RATE = 0.001
+        self.LEARNING_RATE_DECAY_FACTOR = 0.1
+        self.TARGET_LOSS = 0.075
+
+        """
+        evaluation params
+        """
+
+        self.VALIDATION_PERIOD = 100  # steps
+        self.TESTING_PERIOD = 500  # steps
+
+        """
+        testing params
+        """
+
+        self.TESTING_BATCH_SIZE = 1
+        self.TESTING_EPOCHS = 1
+
+        self.VALIDATION_PERC = 0.0
+        self.TESTING_PERC = 0.0
+        self.TRAINING_PERC = 1 - self.VALIDATION_PERC - self.TESTING_PERC
 
         pass

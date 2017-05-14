@@ -4,8 +4,8 @@ import sys
 
 from scipy import misc
 
-from data.abstract.data_set import DataSet
-from data.point import Point
+from src.data.abstract.data_set import DataSet
+from src.data.point import Point
 
 
 class Inputs(DataSet):
@@ -29,7 +29,9 @@ class Inputs(DataSet):
             f = open(os.path.join(self.config.PATH_LABELS, '1_tile'), "r")
             lines = f.readlines()
         i = 0
-        for sample in os.listdir(self.config.PATH):
+        examples = os.listdir(self.config.PATH)
+        examples.sort(key=lambda s: int(s.split('.')[0]))
+        for sample in examples:
             if not sample.__contains__(".jpg"):
                 continue
             # if self.biased_random(self.config.TRAINING_PERC):
@@ -54,7 +56,7 @@ class Inputs(DataSet):
         print('Validation set is {} samples'.format(self.validation_set.size))
         print('Testing set is {} samples'.format(self.testing_set.size))
 
-        return self.training_set, self.validation_set, self.testing_set
+        return self.training_set, self.validation_set, self.testing_set  # TODO: normalize Y to [0,MAX] (relu is [0,max] and data set's coordinate system is not negative, so... no need to normalize)
 
     @staticmethod
     def biased_random(prob_true=0.5):
