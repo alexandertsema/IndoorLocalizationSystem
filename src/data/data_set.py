@@ -2,9 +2,9 @@ import os
 
 import tensorflow as tf
 
-from src.data.abstract.data_set import DataSet as DataSet_Abstract
-from src.data.converter import Converter
-from src.data.inputs import Inputs
+from data.abstract.data_set import DataSet as DataSet_Abstract
+from data.converter import Converter
+from data.inputs import Inputs
 
 
 class DataSet(DataSet_Abstract):

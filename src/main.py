@@ -1,5 +1,5 @@
 #from src.evaluation.test import test
-from src.training.train import train
+from training.train import train
 
 
 session_name = train()

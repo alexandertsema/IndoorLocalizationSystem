@@ -4,8 +4,8 @@ import sys
 
 from scipy import misc
 
-from src.data.abstract.data_set import DataSet
-from src.data.point import Point
+from data.abstract.data_set import DataSet
+from data.point import Point
 
 
 class Inputs(DataSet):

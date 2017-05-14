@@ -1,5 +1,5 @@
-from src.data.input_set import InputSet
-from src.data.point import Point
+from data.input_set import InputSet
+from data.point import Point
 
 
 class Configuration(object):
@@ -46,23 +46,23 @@ class Configuration(object):
         model params
         """
         self.LEAKY_RELU_ALPHA = 0.1
-        self.LSTM_HIDDEN_UNITS = 100
-        self.NUMBER_STEPS = 20
+        self.LSTM_HIDDEN_UNITS = 512
+        self.SEQUENCE_LENGTH = 16
 
         """
         training params
         """
 
-        self.BATCH_SIZE = 128
-        self.EPOCHS = 100
+        self.BATCH_SIZE = 16
+        self.EPOCHS = 100000
         self.LOG_PERIOD = 10  # steps
-        self.SAVE_PERIOD = 500  # steps
+        self.SAVE_PERIOD = 100  # steps
         self.MIN_FRACTION_OF_EXAMPLES_IN_QUEUE = 0.4
         self.NUM_PREPROCESSING_THREADS = 16
-        self.NUM_EPOCHS_PER_DECAY = 10  # Epochs after which learning rate decays.
+        self.NUM_EPOCHS_PER_DECAY = 1000  # Epochs after which learning rate decays.
         self.INITIAL_LEARNING_RATE = 0.001
         self.LEARNING_RATE_DECAY_FACTOR = 0.1
-        self.TARGET_LOSS = 0.075
+        self.TARGET_LOSS = 0.0009
 
         """
         evaluation params

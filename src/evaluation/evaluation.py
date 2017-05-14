@@ -28,4 +28,5 @@ class Evaluation:
 
     @staticmethod
     def correct_number(predictions, labels):
-        return tf.reduce_sum(tf.cast(tf.nn.in_top_k(predictions, labels, 1), tf.int32))
+        casted = tf.nn.in_top_k(predictions, labels, 1)
+        return tf.reduce_sum(casted)
