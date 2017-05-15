@@ -47,22 +47,22 @@ class Configuration(object):
         """
         self.LEAKY_RELU_ALPHA = 0.1
         self.LSTM_HIDDEN_UNITS = 512
-        self.SEQUENCE_LENGTH = 16
+        self.LSTM_LAYERS = 2
 
         """
         training params
         """
 
-        self.BATCH_SIZE = 16
+        self.BATCH_SIZE = 16    # SEQUENCE_LENGTH
         self.EPOCHS = 100000
         self.LOG_PERIOD = 10  # steps
-        self.SAVE_PERIOD = 100  # steps
+        self.SAVE_PERIOD = 10000  # steps
         self.MIN_FRACTION_OF_EXAMPLES_IN_QUEUE = 0.4
         self.NUM_PREPROCESSING_THREADS = 16
         self.NUM_EPOCHS_PER_DECAY = 1000  # Epochs after which learning rate decays.
         self.INITIAL_LEARNING_RATE = 0.001
         self.LEARNING_RATE_DECAY_FACTOR = 0.1
-        self.TARGET_LOSS = 0.0009
+        self.TARGET_LOSS = 0.0000001
 
         """
         evaluation params

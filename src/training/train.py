@@ -33,7 +33,7 @@ def train(session_name=None):
         print('Building model...')
         predictions_training = model.inference(x=data_set.training_set.x, mode_name=config.MODE.TRAINING)
         loss_training = evaluation.loss(predictions=predictions_training, labels=data_set.training_set.y, mode_name=config.MODE.TRAINING)
-        accuracy_training = evaluation.accuracy(predictions=predictions_training, labels=data_set.training_set.y, mode_name=config.MODE.TRAINING)
+        # accuracy_training = evaluation.accuracy(predictions=predictions_training, labels=data_set.training_set.y, mode_name=config.MODE.TRAINING)
         global_step_tensor = tf.contrib.framework.get_or_create_global_step()
         train_op = trainer.train(loss=loss_training, global_step=global_step_tensor, num_examples_per_epoch_for_train=data_set.training_set.size)
 
@@ -67,17 +67,17 @@ def train(session_name=None):
                 for epoch in range(config.EPOCHS):
                     for step in range(int(data_set.training_set.size / config.BATCH_SIZE)):
                         start_time_op = time.time()
-                        _, summary, loss_training_value, accuracy_training_value = sess.run([train_op, merged, loss_training, accuracy_training])
-                        # _, summary, loss_training_value = sess.run([train_op, merged, loss_training])
+                        # _, summary, loss_training_value, accuracy_training_value = sess.run([train_op, merged, loss_training, accuracy_training])
+                        _, summary, loss_training_value = sess.run([train_op, merged, loss_training])
                         duration = time.time() - start_time_op
                         global_step = tf.train.global_step(sess, global_step_tensor)
-                        logger.log(global_step=global_step, epoch=epoch+1, step=step+1, duration=duration, loss=loss_training_value, accuracy=accuracy_training_value, mode=config.MODE.TRAINING)
+                        logger.log(global_step=global_step, epoch=epoch+1, step=step+1, duration=duration, loss=loss_training_value, accuracy=None, mode=config.MODE.TRAINING)
 
                         if global_step % config.LOG_PERIOD == 0:  # update tensorboard
                             summary_writer.add_summary(summary, global_step)
 
                         if global_step == 1 or global_step % config.SAVE_PERIOD == 0:  # save model
-                            sessions_helper.save(global_step_tensor=global_step_tensor, message='Initial saving...')
+                            sessions_helper.save(global_step_tensor=global_step_tensor, message='Model saving...')
 
                         if math.isnan(loss_training_value):
                             print("loss is NaN, breaking training...")

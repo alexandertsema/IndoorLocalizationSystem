@@ -1,13 +1,12 @@
 import tensorflow as tf
 from tensorlayer import activation
-
-# from visualization.visualization import Visualization
+from visualization.visualization import Visualization
 
 
 class Cnn:
     def __init__(self, config):
         self.config = config
-        # self.visualization = Visualization(self.config)
+        self.visualization = Visualization(self.config)
         pass
 
     def inference(self, x, mode_name):
@@ -79,16 +78,16 @@ class Cnn:
         convolutions = self._conv2d(input_tensor, weights, strides=strides)
         activations = activation_fn(convolutions + biases, self.config.LEAKY_RELU_ALPHA)
 
-        # if histogram_summary:
-        #     tf.summary.histogram(mode_name + '_weights', weights)
-        #     tf.summary.histogram(mode_name + '_activations', activations)
-        #
-        # if kernel_image_summary:
-        #     weights_image_grid = self.visualization.kernels_image_grid(kernel=weights)
-        #     tf.summary.image(mode_name + '/features', weights_image_grid, max_outputs=1)
-        #
-        # if activation_image_summary:
-        #     activation_image = self.visualization.activation_image(activations=activations)
-        #     tf.summary.image("/activated", activation_image)
+        if histogram_summary:
+            tf.summary.histogram(mode_name + '_weights', weights)
+            tf.summary.histogram(mode_name + '_activations', activations)
+
+        if kernel_image_summary:
+            weights_image_grid = self.visualization.kernels_image_grid(kernel=weights)
+            tf.summary.image(mode_name + '/features', weights_image_grid, max_outputs=1)
+
+        if activation_image_summary:
+            activation_image = self.visualization.activation_image(activations=activations)
+            tf.summary.image("/activated", activation_image)
 
         return activations

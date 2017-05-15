@@ -10,13 +10,8 @@ class Lstm:
     def cell(lstm_size):
         return tf.contrib.rnn.BasicLSTMCell(num_units=lstm_size, state_is_tuple=False)
 
-    # def inference(self, x, mode_name, lstm_size):
-    #     lstm = tf.contrib.rnn.BasicLSTMCell(lstm_size)
-    #
-    #     state = tf.zeros([self.config.BATCH_SIZE, lstm.state_size])
-    #
-    #     output = None
-    #     for _ in range(self.config.TILE_1_NUMBER_OF_EXAMPLES):
-    #         output, state = lstm(x, state)
-    #
-    #     return output
+    def lstm(self):
+        return tf.contrib.rnn.MultiRNNCell([self.cell(self.config.LSTM_HIDDEN_UNITS) for _ in range(self.config.LSTM_LAYERS)])
+
+    def inference(self, x, mode_name):
+        return tf.contrib.rnn.static_rnn(self.lstm(), x, dtype=tf.float32)

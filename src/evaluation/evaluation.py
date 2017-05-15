@@ -7,6 +7,9 @@ class Evaluation:
         pass
 
     def loss(self, predictions, labels, mode_name):  # Calculate the average cross entropy loss across the batch.
+        if predictions.get_shape()[0].value is 1:   # if we don't use batch, but single example (which is given by LSTM)
+            labels = tf.split(labels, self.config.BATCH_SIZE)[-1]
+
         with tf.variable_scope('loss_function_{}'.format(mode_name)):
             loss = tf.losses.mean_squared_error(labels=labels, predictions=predictions)
 
