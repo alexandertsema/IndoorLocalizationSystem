@@ -22,33 +22,40 @@ class Inputs(DataSet):
 
     def read_files(self):
         print('Reading data from', self.config.PATH)
-        delta = abs(self.config.VALIDATION_PERC - self.config.TESTING_PERC)
-        val_perc = 0.5 + delta
-        lines = None
-        if os.path.exists(os.path.join(self.config.PATH_LABELS, '1_tile')):
-            f = open(os.path.join(self.config.PATH_LABELS, '1_tile'), "r")
+
+        lines = None    # read labels
+        if os.path.exists(os.path.join(self.config.PATH_LABELS)):
+            f = open(os.path.join(self.config.PATH_LABELS), "r")
             lines = f.readlines()
+
+        # examples = os.listdir(self.config.PATH)     # read images
+        # examples.sort(key=lambda s: int(s.split('.')[0]))
+
         i = 0
-        examples = os.listdir(self.config.PATH)
-        examples.sort(key=lambda s: int(s.split('.')[0]))
-        for sample in examples:
-            if not sample.__contains__(".jpg"):
-                continue
-            # if self.biased_random(self.config.TRAINING_PERC):
-            data_set = self.training_set
-            # elif self.biased_random(val_perc):
-            #     data_set = self.validation_set
-            # else:
-            #     data_set = self.testing_set
+        data_catalogs = os.listdir(self.config.PATH)
+        data_catalogs.sort()
+        for catalog in data_catalogs:
+            examples = os.listdir(os.path.join(self.config.PATH, catalog))  # read images
+            examples.sort(key=lambda s: int(s.split('.')[0]))
+            for sample in examples:
+                if not sample.__contains__(".jpg"):
+                    continue
 
-            data_set.x.append(self.raw_bytes('{0}/{1}'.format(self.config.PATH, sample)))
-            data_set.y.append(Point(lines[i].split(' ')[1], lines[i].split(' ')[2]))
-            data_set.size += 1
+                if i < len(lines) * self.config.TRAINING_PERC:
+                    data_set = self.training_set
+                elif len(lines) * self.config.TRAINING_PERC < i < len(lines) * self.config.TRAINING_PERC + len(lines) * self.config.VALIDATION_PERC:
+                    data_set = self.validation_set
+                else:
+                    data_set = self.testing_set
 
-            i += 1
+                data_set.x.append(self.raw_bytes(os.path.join(self.config.PATH, catalog, sample)))
+                data_set.y.append(Point(lines[i].split(' ')[1], lines[i].split(' ')[2]))
+                data_set.size += 1
 
-            sys.stdout.write('\r>> Samples read: {}'.format(self.training_set.size + self.validation_set.size + self.testing_set.size))
-            sys.stdout.flush()
+                i += 1
+
+                sys.stdout.write('\r>> Samples read: {}'.format(self.training_set.size + self.validation_set.size + self.testing_set.size))
+                sys.stdout.flush()
 
         print()
         print('Data set is {} samples'.format(self.training_set.size + self.validation_set.size + self.testing_set.size))

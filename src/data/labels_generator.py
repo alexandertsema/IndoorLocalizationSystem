@@ -8,77 +8,91 @@ def get_frames_delta(frame_1, frame_2):
 
 
 def get_delta_distance(point_1, point_2):
-    if point_1.X == point_2.X:
-        return abs(point_1.Y - point_2.Y)
-    if point_1.Y == point_2.Y:
-        return abs(point_1.X - point_2.X)
+    if point_1.x == point_2.x:
+        return abs(point_1.y - point_2.y)
+    if point_1.y == point_2.y:
+        return abs(point_1.x - point_2.x)
 
 
 def get_avg_speed(distance, time):
     return distance / time
 
 
+def write_tile(file, tile, global_i):
+    delta_distance = get_delta_distance(tile.point_1, tile.point_2)
+    avg_speed = get_avg_speed(delta_distance, get_frames_delta(tile.frame_1, tile.frame_2))
+    x = tile.point_1.x
+    y = tile.point_1.y
+    for i in range(get_frames_delta(tile.frame_1, tile.frame_2)):
+        if tile.tile_type is config.TILE_TYPE.A:
+            x += 0
+            y += avg_speed
+        elif tile.tile_type is config.TILE_TYPE.B:
+            x += avg_speed
+            y += 0
+        elif tile.tile_type is config.TILE_TYPE.C:
+            x += 0
+            y -= avg_speed
+        elif tile.tile_type is config.TILE_TYPE.D:
+            x -= avg_speed
+            y += 0
+        elif tile.tile_type is config.TILE_TYPE.E:
+            x += 0
+            y += avg_speed
+        global_i += 1
+        file.write('{} {} {}\n'.format(global_i, x, y))
+
+    return global_i
+
 config = Configuration()
 
-if not os.path.exists(os.path.join(config.PATH_LABELS, '1_tile')):
-    meta = open(os.path.join(config.PATH_LABELS, '1_tile'), "w+")
+if not os.path.exists(os.path.join(config.PATH_LABELS, 'tiles')):
+    meta = open(os.path.join(config.PATH_LABELS, 'tiles'), "w+")
     meta.close()
 
-with open(os.path.join(config.PATH_LABELS, '1_tile'), "a") as f:
+with open(os.path.join(config.PATH_LABELS, 'tiles'), "a") as f:
     global_i = 0
-    #  A
-    delta_distance_a = get_delta_distance(config.TILE_1_A.point_1, config.TILE_1_A.point_2)
-    avg_speed_a = get_avg_speed(delta_distance_a, get_frames_delta(config.TILE_1_A.frame_1, config.TILE_1_A.frame_2))
-    x = config.TILE_1_A.point_1.x
-    y = config.TILE_1_A.point_1.y
-    for i in range(get_frames_delta(config.TILE_1_A.frame_1, config.TILE_1_A.frame_2)):
-        x += 0
-        y += avg_speed_a
-        global_i = i
-        f.write('{} {} {}\n'.format(i, x, y))
 
-    # B
-    delta_distance_b = get_delta_distance(config.TILE_1_B.point_1, config.TILE_1_B.point_2)
-    avg_speed_b = get_avg_speed(delta_distance_b, get_frames_delta(config.TILE_1_B.frame_1, config.TILE_1_B.frame_2))
-    x = config.TILE_1_B.point_1.x
-    y = config.TILE_1_B.point_1.y
-    for i in range(get_frames_delta(config.TILE_1_B.frame_1, config.TILE_1_B.frame_2)):
-        x += avg_speed_b
-        y += 0
-        global_i += 1
-        f.write('{} {} {}\n'.format(global_i, x, y))
+    global_i = write_tile(f, config.TILE_1_A, global_i)
+    global_i = write_tile(f, config.TILE_1_B, global_i)
+    global_i = write_tile(f, config.TILE_1_C, global_i)
+    global_i = write_tile(f, config.TILE_1_D, global_i)
+    global_i = write_tile(f, config.TILE_1_E, global_i)
 
-    # C
-    delta_distance_c = get_delta_distance(config.TILE_1_C.point_1, config.TILE_1_C.point_2)
-    avg_speed_c = get_avg_speed(delta_distance_c, get_frames_delta(config.TILE_1_C.frame_1, config.TILE_1_C.frame_2))
-    x = config.TILE_1_C.point_1.x
-    y = config.TILE_1_C.point_1.y
-    for i in range(get_frames_delta(config.TILE_1_C.frame_1, config.TILE_1_C.frame_2)):
-        x += 0
-        y -= avg_speed_c
-        global_i += 1
-        f.write('{} {} {}\n'.format(global_i, x, y))
+    global_i = write_tile(f, config.TILE_2_A, global_i)
+    global_i = write_tile(f, config.TILE_2_B, global_i)
+    global_i = write_tile(f, config.TILE_2_C, global_i)
+    global_i = write_tile(f, config.TILE_2_D, global_i)
+    global_i = write_tile(f, config.TILE_2_E, global_i)
 
-    # D
-    delta_distance_d = get_delta_distance(config.TILE_1_D.point_1, config.TILE_1_D.point_2)
-    avg_speed_d = get_avg_speed(delta_distance_d, get_frames_delta(config.TILE_1_D.frame_1, config.TILE_1_D.frame_2))
-    x = config.TILE_1_D.point_1.x
-    y = config.TILE_1_D.point_1.y
-    for i in range(get_frames_delta(config.TILE_1_D.frame_1, config.TILE_1_D.frame_2)):
-        x -= avg_speed_d
-        y += 0
-        global_i += 1
-        f.write('{} {} {}\n'.format(global_i, x, y))
+    global_i = write_tile(f, config.TILE_3_A, global_i)
+    global_i = write_tile(f, config.TILE_3_B, global_i)
+    global_i = write_tile(f, config.TILE_3_C, global_i)
+    global_i = write_tile(f, config.TILE_3_D, global_i)
+    global_i = write_tile(f, config.TILE_3_E, global_i)
 
-    # E
-    delta_distance_e = get_delta_distance(config.TILE_1_E.point_1, config.TILE_1_E.point_2)
-    avg_speed_e = get_avg_speed(delta_distance_e, get_frames_delta(config.TILE_1_E.frame_1, config.TILE_1_E.frame_2))
-    x = config.TILE_1_E.point_1.x
-    y = config.TILE_1_E.point_1.y
-    for i in range(get_frames_delta(config.TILE_1_E.frame_1, config.TILE_1_E.frame_2)):
-        x += 0
-        y += avg_speed_e
-        global_i += 1
-        f.write('{} {} {}\n'.format(global_i, x, y))
+    global_i = write_tile(f, config.TILE_4_A, global_i)
+    global_i = write_tile(f, config.TILE_4_B, global_i)
+    global_i = write_tile(f, config.TILE_4_C, global_i)
+    global_i = write_tile(f, config.TILE_4_D, global_i)
+    global_i = write_tile(f, config.TILE_4_E, global_i)
+
+    global_i = write_tile(f, config.TILE_5_A, global_i)
+    global_i = write_tile(f, config.TILE_5_B, global_i)
+    global_i = write_tile(f, config.TILE_5_C, global_i)
+    global_i = write_tile(f, config.TILE_5_D, global_i)
+    global_i = write_tile(f, config.TILE_5_E, global_i)
+
+    global_i = write_tile(f, config.TILE_6_A, global_i)
+    global_i = write_tile(f, config.TILE_6_B, global_i)
+    global_i = write_tile(f, config.TILE_6_C, global_i)
+    global_i = write_tile(f, config.TILE_6_D, global_i)
+    global_i = write_tile(f, config.TILE_6_E, global_i)
+
+    global_i = write_tile(f, config.TILE_7_A, global_i)
+    global_i = write_tile(f, config.TILE_7_B, global_i)
+    global_i = write_tile(f, config.TILE_7_C, global_i)
+    global_i = write_tile(f, config.TILE_7_D, global_i)
+    global_i = write_tile(f, config.TILE_7_E, global_i)
 
     f.close()

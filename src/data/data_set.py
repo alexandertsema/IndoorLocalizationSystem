@@ -20,8 +20,8 @@ class DataSet(DataSet_Abstract):
         self.testing_set.x, self.testing_set.y = self.read_tf_records_file('testing_set', batch_size)
 
         if self.training_set.x is None and self.validation_set.x is None \
-                and self.training_set.y is None and self.validation_set.y is None \
-                and self.testing_set.x is None and self.testing_set.y is None:
+                or self.training_set.y is None or self.validation_set.y is None \
+                or self.testing_set.x is None or self.testing_set.y is None:
             print()
             print('Datasets do not exist, creating new ones...')
 

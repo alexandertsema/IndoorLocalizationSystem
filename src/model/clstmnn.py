@@ -11,7 +11,7 @@ class Clstmnn:
         self.lstm = Lstm(config)
         pass
 
-    def inference(self, x, mode_name):
+    def inference(self, x, mode_name, reuse_lstm):
         with tf.name_scope('inputs'):
             x = tf.reshape(x, [-1, self.config.IMAGE_SIZE.HEIGHT, self.config.IMAGE_SIZE.WIDTH, self.config.IMAGE_SIZE.CHANNELS])
 
@@ -25,8 +25,7 @@ class Clstmnn:
         features_sequence = tf.split(features, self.config.BATCH_SIZE, 0)
 
         with tf.variable_scope('seq'):
-            output, state = self.lstm.inference(x=features_sequence, mode_name=mode_name)  # get seq dependency with LSTM
-            # output, state = tf.contrib.rnn.static_rnn(lstm, features_sequence, dtype=tf.float32)  # get seq dependency with LSTM
+            output, state = self.lstm.inference(x=features_sequence, mode_name=mode_name, reuse=reuse_lstm)  # get seq dependency with LSTM
 
         with tf.variable_scope('dense'):
             dense = tf.layers.dense(inputs=output[-1], units=2, activation=activation.lrelu)  # predict X and Y with Fully connected layer
