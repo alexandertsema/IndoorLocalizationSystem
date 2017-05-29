@@ -10,13 +10,15 @@ class Configuration(object):
         """
         self.PATH = "/home/alex/Documents/Project/data/FRAME_DATABASES"
         self.PATH_LABELS = "/home/alex/Documents/Project/LSTM_labels/tiles"
-        self.DATA_SET_PATH = "/home/alex/PycharmProjects/IndoorLocalizationSystem/data"
-        self.OUTPUT_PATH = '/home/alex/PycharmProjects/IndoorLocalizationSystem/runs/out_'
+        self.DATA_SET_PATH = "../data"
+        self.OUTPUT_PATH = '/media/alex/Локальный диск/UBUNTU/runs/'
         self.MAP_PATH = ''
 
         """
         dataset params
         """
+        self.NORM_RANGE = (0, 1)
+
         class TileType(object):
             def __init__(self):
                 self.A = 'A'
@@ -111,7 +113,7 @@ class Configuration(object):
         training params
         """
 
-        self.BATCH_SIZE = 16    # SEQUENCE_LENGTH
+        self.BATCH_SIZE = 100    # SEQUENCE_LENGTH
         self.EPOCHS = 100000
         self.LOG_PERIOD = 10  # steps
         self.SAVE_PERIOD = 1000  # steps
@@ -120,13 +122,13 @@ class Configuration(object):
         self.NUM_EPOCHS_PER_DECAY = 1000  # Epochs after which learning rate decays.
         self.INITIAL_LEARNING_RATE = 0.001
         self.LEARNING_RATE_DECAY_FACTOR = 0.1
-        self.TARGET_LOSS = 0.0000001
+        self.TARGET_LOSS = 0.001
 
         """
         testing params
         """
 
-        self.TESTING_BATCH_SIZE = 16   # SEQUENCE_LENGTH
+        self.TESTING_BATCH_SIZE = self.BATCH_SIZE   # SEQUENCE_LENGTH
         self.TESTING_EPOCHS = 1
 
         self.VALIDATION_PERC = 0.2

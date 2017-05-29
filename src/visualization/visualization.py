@@ -2,6 +2,7 @@ import tensorflow as tf
 from math import *
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 
 class Visualization:
@@ -76,12 +77,9 @@ class Visualization:
 
         pass
 
-    @staticmethod
-    def display_on_map(point_actual, point_predicted):
+    def display_on_map(self, point_actual, point_predicted, session_name, mse):
 
         fig, ax = plt.subplots()
-        # ax.set_xlim([0, 8])
-        # ax.set_ylim([0, 8])
 
         x_actual = []
         y_actual = []
@@ -99,7 +97,16 @@ class Visualization:
 
         ax.scatter(x_actual, y_actual, c='g', marker=".")
         ax.scatter(x_predicted, y_predicted, c='r', marker=".")
+        ax.text(0, 1, 'MSE = %.4f' % mse, fontsize=10)
 
         plt.gca().invert_yaxis()
         plt.show()
+
+        self.save_map(fig, session_name)
+
         pass
+
+    def save_map(self, fig, session_name):
+        fig.savefig(os.path.join(self.config.OUTPUT_PATH, session_name + '_tested', session_name + "_map.png"))
+        pass
+

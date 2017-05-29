@@ -2,7 +2,6 @@ import sys
 import time
 from datetime import datetime
 import numpy as np
-import matplotlib.pyplot as plt
 import tensorflow as tf
 from data.data_set import DataSet
 from evaluation.evaluation import Evaluation
@@ -69,9 +68,9 @@ def test(session_name=None, is_visualize=False):
 
             print()
             print('testing completed in %s' % (time.time() - start_time))
-            print('%s: MSE @ 1 = %.3f' % (datetime.now(), np.array(mses).mean()))
+            print('%s: MSE @ 1 = %.9f' % (datetime.now(), np.array(mses).mean()))
 
-            visualization.display_on_map(actual_labels, predicted_labels)
+            visualization.display_on_map(actual_labels, predicted_labels, session_name, np.array(mses).mean())
 
             sessions_helper.end()
 

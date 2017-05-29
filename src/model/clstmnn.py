@@ -1,5 +1,4 @@
 import tensorflow as tf
-from tensorlayer import activation
 from model.cnn import Cnn
 from model.lstm import Lstm
 
@@ -17,8 +16,6 @@ class Clstmnn:
 
         tf.summary.image("/inputs", x, max_outputs=4)
 
-        # lstm = self.lstm.cell(self.config.LSTM_HIDDEN_UNITS)
-
         with tf.variable_scope('features'):
             features = self.cnn.inference(x=x, mode_name=mode_name)  # extract features with CNN
 
@@ -27,8 +24,10 @@ class Clstmnn:
         with tf.variable_scope('seq'):
             output, state = self.lstm.inference(x=features_sequence, mode_name=mode_name, reuse=reuse_lstm)  # get seq dependency with LSTM
 
+        concat_output = tf.concat(output, 0)
+
         with tf.variable_scope('dense'):
-            dense = tf.layers.dense(inputs=output[-1], units=2, activation=activation.lrelu)  # predict X and Y with Fully connected layer
+            dense = tf.layers.dense(inputs=concat_output, units=2, activation=tf.sigmoid)  # predict X and Y with Fully connected layer
 
         logits = dense
 

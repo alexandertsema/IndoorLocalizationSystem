@@ -1,7 +1,7 @@
 import os
 import random
 import sys
-
+import numpy as np
 from scipy import misc
 
 from data.abstract.data_set import DataSet
@@ -23,13 +23,19 @@ class Inputs(DataSet):
     def read_files(self):
         print('Reading data from', self.config.PATH)
 
-        lines = None    # read labels
+        lines = []    # read labels
         if os.path.exists(os.path.join(self.config.PATH_LABELS)):
             f = open(os.path.join(self.config.PATH_LABELS), "r")
             lines = f.readlines()
 
-        # examples = os.listdir(self.config.PATH)     # read images
-        # examples.sort(key=lambda s: int(s.split('.')[0]))
+        x = []
+        y = []
+        for line in lines:
+            x.append(float(line.split(' ')[1]))
+            y.append(float(line.split(' ')[2]))
+
+        x = self._normalize(x)
+        y = self._normalize(y)
 
         i = 0
         data_catalogs = os.listdir(self.config.PATH)
@@ -48,8 +54,8 @@ class Inputs(DataSet):
                 else:
                     data_set = self.testing_set
 
-                data_set.x.append(self.raw_bytes(os.path.join(self.config.PATH, catalog, sample)))
-                data_set.y.append(Point(lines[i].split(' ')[1], lines[i].split(' ')[2]))
+                data_set.x.append(self._raw_bytes(os.path.join(self.config.PATH, catalog, sample)))
+                data_set.y.append(Point(x[i], y[i]))
                 data_set.size += 1
 
                 i += 1
@@ -69,15 +75,23 @@ class Inputs(DataSet):
     def biased_random(prob_true=0.5):
         return random.random() < prob_true
 
-    def raw_bytes(self, file_name):
+    def _raw_bytes(self, file_name):
         raw_image = self._decoded_image(file_name)
-        return self.preprocess_image(raw_image)
+        return self._preprocess_image(raw_image)
 
     @staticmethod
     def _decoded_image(file_name):
         return misc.imread(file_name)
 
-    def preprocess_image(self, raw_image):
+    def _preprocess_image(self, raw_image):
         #  TODO could add distortions here
         return misc.imresize(raw_image, (self.config.IMAGE_SIZE.HEIGHT, self.config.IMAGE_SIZE.WIDTH, self.config.IMAGE_SIZE.CHANNELS), interp='bilinear', mode=None)
+
+    def _normalize(self, vector):
+        arr = np.array(vector)
+        min = np.amin(arr)
+        max = np.amax(arr)
+        for i in range(len(arr)):
+            arr[i] = (((arr[i]-min)*(self.config.NORM_RANGE[1] - self.config.NORM_RANGE[0]))/(max-min)) + self.config.NORM_RANGE[0]
+        return arr
 
